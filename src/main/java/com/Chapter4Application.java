@@ -2,20 +2,24 @@ package com;
 
 import org.mybatis.spring.annotation.MapperScan;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
+
+import javax.annotation.PostConstruct;
 
 
 //定义Spring Boot扫描包的路径
 
 @SpringBootApplication(scanBasePackages = {"com.springboot.chapter4"})
 //定义JPA接口扫描包路径
-@EnableJpaRepositories(basePackages = "com.springboot.chapter4.dao")
+//@EnableJpaRepositories(basePackages = "com.springboot.chapter4.dao")
 //定义实体Bean扫描包路径
-@EntityScan(basePackages = "com.springboot.chapter.pojo")
+//@EntityScan(basePackages = "com.springboot.chapter.pojo")
 //定义MyBatis的扫描
 @MapperScan(
         //指定扫描包
@@ -34,4 +38,14 @@ public class Chapter4Application {
         SpringApplication.run(Chapter4Application.class, args);
     }
 
+    //注入事务管理器，它由Spring Boot自动生成
+    @Autowired
+    PlatformTransactionManager transactionManager = null;
+
+    //使用后初始化方法，观察自动生成的事务管理器
+    @PostConstruct
+    public void viewTransactionManager() {
+        //启动前加入断点观测
+        System.out.println(transactionManager.getClass().getName());
+    }
 }
